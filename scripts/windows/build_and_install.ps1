@@ -1,12 +1,13 @@
 param(
-    [Parameter(Mandatory = $true)]
     [string]$BakkesModSdkPath,
 
     [Parameter(Mandatory = $true)]
     [string]$BakkesModFolder,
 
     [ValidateSet('Debug', 'Release')]
-    [string]$Configuration = 'Release'
+    [string]$Configuration = 'Release',
+
+    [switch]$CloneSdkIfMissing
 )
 
 $ErrorActionPreference = 'Stop'
@@ -15,8 +16,16 @@ $RepoRoot = Resolve-Path (Join-Path $PSScriptRoot '..\..')
 $BuildDir = Join-Path $RepoRoot 'build'
 $PluginsDir = Join-Path $BakkesModFolder 'bakkesmod\plugins'
 
+if ([string]::IsNullOrWhiteSpace($BakkesModSdkPath)) {
+    $BakkesModSdkPath = Join-Path $RepoRoot 'external\BakkesModSDK'
+}
+
+if ($CloneSdkIfMissing -and -not (Test-Path $BakkesModSdkPath)) {
+    git clone https://github.com/bakkesmodorg/BakkesModSDK.git $BakkesModSdkPath
+}
+
 if (-not (Test-Path (Join-Path $BakkesModSdkPath 'include'))) {
-    throw "Invalid BakkesMod SDK path. Missing include folder: $BakkesModSdkPath"
+    throw "Invalid BakkesMod SDK path. Missing include folder: $BakkesModSdkPath. Clone with: git clone https://github.com/bakkesmodorg/BakkesModSDK.git $BakkesModSdkPath"
 }
 
 if (-not (Test-Path (Join-Path $BakkesModSdkPath 'lib'))) {
