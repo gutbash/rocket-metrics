@@ -26,7 +26,13 @@ This repository contains an MVP BakkesMod plugin for Rocket League that renders 
 
 ### Prerequisites
 1. **BakkesMod installed** and working with Rocket League.
-2. **BakkesMod SDK** downloaded somewhere on disk.
+2. **BakkesMod SDK** cloned locally:
+
+   ```powershell
+   git clone https://github.com/bakkesmodorg/BakkesModSDK.git external/BakkesModSDK
+   ```
+
+   By default, this repo now looks for the SDK at `external/BakkesModSDK`.
 3. **Visual Studio 2022** (Desktop development with C++ workload) and CMake installed.
 
 ### One-command build + install
@@ -34,19 +40,20 @@ From PowerShell in this repo:
 
 ```powershell
 ./scripts/windows/build_and_install.ps1 `
-  -BakkesModSdkPath "C:\dev\bakkesmodsdk" `
   -BakkesModFolder "C:\Program Files\BakkesMod" `
+  -CloneSdkIfMissing `
   -Configuration Release
 ```
 
 This script will:
+- clone the SDK to `external/BakkesModSDK` if needed,
 - configure CMake with your SDK path,
 - build `RocketMetrics.dll`,
 - copy the DLL into `BakkesMod\bakkesmod\plugins\RocketMetrics.dll`.
 
 ### Manual build (if you prefer)
 ```powershell
-cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DBAKKESMOD_SDK_PATH="C:\dev\bakkesmodsdk" -DROCKETMETRICS_REQUIRE_SDK=ON
+cmake -S . -B build -G "Visual Studio 17 2022" -A x64 -DBAKKESMOD_SDK_PATH="external/BakkesModSDK" -DROCKETMETRICS_REQUIRE_SDK=ON
 cmake --build build --config Release
 copy .\build\Release\RocketMetrics.dll "C:\Program Files\BakkesMod\bakkesmod\plugins\RocketMetrics.dll"
 ```
