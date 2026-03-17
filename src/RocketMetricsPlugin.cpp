@@ -10,65 +10,27 @@ std::shared_ptr<CVarManagerWrapper> _globalCvarManager;
 void RocketMetricsPlugin::onLoad() {
 	_globalCvarManager = cvarManager;
 
-	auto enabledCvar = cvarManager->registerCvar(
-		"rocketmetrics_enabled",
-		"1",
-		"Enable the Rocket Metrics overlay.",
-		true,
-		true,
-		0,
-		true,
-		1
-	);
+	auto enabledCvar = cvarManager->registerCvar("rocketmetrics_enabled", "1", "Enable the Rocket Metrics overlay.",
+	                                             true, true, 0, true, 1);
 	enabled_ = enabledCvar.getBoolValue();
-	enabledCvar.addOnValueChanged([this](std::string, CVarWrapper updatedCvar) {
-		enabled_ = updatedCvar.getBoolValue();
-	});
+	enabledCvar.addOnValueChanged(
+	    [this](std::string, CVarWrapper updatedCvar) { enabled_ = updatedCvar.getBoolValue(); });
 
-	auto xCvar = cvarManager->registerCvar(
-		"rocketmetrics_overlay_x",
-		"48",
-		"Overlay X position.",
-		true,
-		true,
-		0,
-		false,
-		0
-	);
+	auto xCvar =
+	    cvarManager->registerCvar("rocketmetrics_overlay_x", "48", "Overlay X position.", true, true, 0, false, 0);
 	overlayX_ = xCvar.getFloatValue();
-	xCvar.addOnValueChanged([this](std::string, CVarWrapper updatedCvar) {
-		overlayX_ = updatedCvar.getFloatValue();
-	});
+	xCvar.addOnValueChanged([this](std::string, CVarWrapper updatedCvar) { overlayX_ = updatedCvar.getFloatValue(); });
 
-	auto yCvar = cvarManager->registerCvar(
-		"rocketmetrics_overlay_y",
-		"120",
-		"Overlay Y position.",
-		true,
-		true,
-		0,
-		false,
-		0
-	);
+	auto yCvar =
+	    cvarManager->registerCvar("rocketmetrics_overlay_y", "120", "Overlay Y position.", true, true, 0, false, 0);
 	overlayY_ = yCvar.getFloatValue();
-	yCvar.addOnValueChanged([this](std::string, CVarWrapper updatedCvar) {
-		overlayY_ = updatedCvar.getFloatValue();
-	});
+	yCvar.addOnValueChanged([this](std::string, CVarWrapper updatedCvar) { overlayY_ = updatedCvar.getFloatValue(); });
 
-	auto scaleCvar = cvarManager->registerCvar(
-		"rocketmetrics_overlay_scale",
-		"1.0",
-		"Overlay text scale.",
-		true,
-		true,
-		0.25F,
-		true,
-		4.0F
-	);
+	auto scaleCvar = cvarManager->registerCvar("rocketmetrics_overlay_scale", "1.0", "Overlay text scale.", true, true,
+	                                           0.25F, true, 4.0F);
 	overlayScale_ = scaleCvar.getFloatValue();
-	scaleCvar.addOnValueChanged([this](std::string, CVarWrapper updatedCvar) {
-		overlayScale_ = updatedCvar.getFloatValue();
-	});
+	scaleCvar.addOnValueChanged(
+	    [this](std::string, CVarWrapper updatedCvar) { overlayScale_ = updatedCvar.getFloatValue(); });
 
 	gameWrapper->RegisterDrawable(std::bind(&RocketMetricsPlugin::RenderOverlay, this, std::placeholders::_1));
 	cvarManager->log("[RocketMetrics] Loaded MVP overlay MVP.");

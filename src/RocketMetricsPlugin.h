@@ -3,11 +3,11 @@
 #include "pch.h"
 
 class RocketMetricsPlugin final : public BakkesMod::Plugin::BakkesModPlugin {
-public:
+  public:
 	void onLoad() override;
 	void onUnload() override;
 
-private:
+  private:
 	void RenderOverlay(CanvasWrapper canvas);
 	PriWrapper GetLocalPRI() const;
 	bool IsLocalPlayerCurrentMvp(const PriWrapper& localPri) const;
