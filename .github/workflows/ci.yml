@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format cppcheck
+
+      - name: Verify formatting
+        run: clang-format --dry-run --Werror src/*.h src/*.cpp
+
+      - name: Static analysis (cppcheck)
+        run: |
+          cppcheck \
+            --enable=warning,performance,portability,style \
+            --error-exitcode=1 \
+            --inline-suppr \
+            --language=c++ \
+            --std=c++17 \
+            --suppress=missingIncludeSystem \
+            --suppress=unknownMacro \
+            src
+
+      - name: CMake configure smoke test
+        run: cmake -S . -B build
